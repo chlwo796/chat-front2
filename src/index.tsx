@@ -7,6 +7,23 @@ import { Provider } from 'react-redux';
 import { store } from './store';
 import { PersistGate } from 'redux-persist/integration/react';
 import { persistStore } from 'redux-persist';
+import 'froala-editor/css/froala_style.min.css';
+import 'froala-editor/css/froala_editor.pkgd.min.css';
+
+// // Froala Editor 스타일 및 스크립트를 동적으로 추가합니다.
+// const froalaScript = document.createElement('script');
+// froalaScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/froala-editor/4.2.6/js/froala_editor.min.js';
+// document.head.appendChild(froalaScript);
+
+// const froalaCss = document.createElement('link');
+// froalaCss.rel = 'stylesheet';
+// froalaCss.href = 'https://cdnjs.cloudflare.com/ajax/libs/froala-editor/4.2.6/css/froala_editor.min.css';
+// document.head.appendChild(froalaCss);
+
+// const froalaStyle = document.createElement('link');
+// froalaStyle.rel = 'stylesheet';
+// froalaStyle.href = 'https://cdnjs.cloudflare.com/ajax/libs/froala-editor/4.2.6/css/froala_style.min.css';
+// document.head.appendChild(froalaStyle);
 
 export let persistor = persistStore(store);
 const root = ReactDOM.createRoot(

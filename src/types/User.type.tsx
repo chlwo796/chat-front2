@@ -16,5 +16,7 @@ export interface User{
     token?:string;
     uiImgPath?:string;
     login?:boolean;
+    loginDate?:string;
+    sessionId?:string;
     authorities?:any[];
 }

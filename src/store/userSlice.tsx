@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { Action } from "@remix-run/router";
 import { User } from "../types/User.type";
+import { PURGE } from "redux-persist";
 
 const initialState:User = {
     uiNum:0,
@@ -20,6 +20,8 @@ const initialState:User = {
     token:'',
     uiImgPath: '',
     login:false,
+    loginDate: '',
+    sessionId : '',
     authorities:[]
 };
 const userSlice = createSlice({
@@ -42,13 +44,37 @@ const userSlice = createSlice({
             state.uiImgPath = action.payload.uiImgPath;
             state.login = action.payload.login;
             state.token = action.payload.token;
-            state.authorities = action.payload.token;
+            state.loginDate = action.payload.loginDate;
+            state.sessionId = action.payload.sessionId;
+            state.authorities = action.payload.authorities;
         },
         initUser:(state:User) => {
             state = initialState;
+            state.uiNum = initialState.uiNum;
+            state.uiId = initialState.uiId;
+            state.uiName = initialState.uiName;
+            state.uiEmail = initialState.uiEmail;
+            state.uiPhone = initialState.uiPhone;
+            state.uiBirth = initialState.uiBirth;
+            state.uiGender = initialState.uiGender;
+            state.uiCredat = initialState.uiCredat;
+            state.uiCretim = initialState.uiCretim;
+            state.uiLmodat = initialState.uiLmodat;
+            state.uiLmotim = initialState.uiLmotim;
+            state.riNum = initialState.riNum;
+            state.uiImgPath = initialState.uiImgPath;
+            state.login = initialState.login;
+            state.token = initialState.token;
+            state.loginDate = initialState.loginDate;
+            state.sessionId = initialState.sessionId;
+            state.authorities = initialState.authorities;
         }
+    },
+    extraReducers : (builder) => {
+        // 로그아웃 reducer
+        builder.addCase(PURGE, ()=> initialState);
     }
-})
+});
 
 export const {setUser,initUser} = userSlice.actions;
 export default userSlice.reducer;
