@@ -6,7 +6,7 @@ const initialState = {
 }
 const enterUserSlice = createSlice({
     name:'enterUser',
-    initialState:{uiNum : 0, uiName : ''},
+    initialState:initialState,
     reducers:{
         setEnterUser: (state:any,action:any)=>{
             state.uiNum = action.payload.uiNum;

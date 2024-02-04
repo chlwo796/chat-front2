@@ -13,13 +13,13 @@ import { disconnectClient, initClient } from './service/ClientService';
 import { CustomToast } from './components/CostumToast';
 import { setEnterUser } from './store/enterUserSlice';
 import { Menu } from './components/Menu';
+import { persistor } from '.';
 
 
 
 function App() {
-  const loginUser = useChatSelector((state:any)=>state);
+  const loginUser = useChatSelector((state:any)=>state.user);
   const tmpObj = useChatSelector((state:any)=>state.userList);
-  const uiNum = localStorage.getItem('uiNum');
   const dispatch = useChatDispatch();
   const configs = [{
     url: `/topic/enter-chat`,
@@ -42,11 +42,13 @@ function App() {
     url: `/topic/chat/${loginUser.uiNum}`,
     callback: (data:any) => {
       const msg = JSON.parse(data.body);
+      console.log(msg);
     }
   }]
   useEffect(()=>{
     disconnectClient();
-    if(!uiNum){
+    if(!loginUser.uiNum){
+      persistor.purge();
       return;
     }
     initClient(configs)

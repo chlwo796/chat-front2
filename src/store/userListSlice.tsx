@@ -6,12 +6,9 @@ const userListSlice = createSlice({
     reducers:{
         setUserList: (state:any,action:any)=>{
             state.list = action.payload;
-        },
-        initUserList:(state:any)=>{
-            state.list = [];
         }
     }
 })
 
-export const {setUserList, initUserList} = userListSlice.actions;
+export const { setUserList } = userListSlice.actions;
 export default userListSlice.reducer;

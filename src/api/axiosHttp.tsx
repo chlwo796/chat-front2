@@ -1,18 +1,19 @@
 import axios from "axios";
 
 const url = `${process.env.REACT_APP_HTTP}://${process.env.REACT_APP_HOST}`;
-
+const token = localStorage.getItem('token');
 export const axiosHttp = axios.create({
     baseURL: url,
     headers:{
-        'Content-Type' : 'application/json;charset=UTF-8'
+        'Content-Type' : 'application/json;charset=UTF-8',
     }
 })
 
 export const axiosAuth = axios.create({
     baseURL: url,
     headers:{
-        'Content-Type' : 'application/json;charset=UTF-8'
+        'Content-Type' : 'application/json;charset=UTF-8',
+        'Authorization' : `Bearer ${token}`
     }
 })
 
