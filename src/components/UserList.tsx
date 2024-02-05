@@ -27,6 +27,8 @@ export const UserList = ()=>{
               onClick={()=>{
                 dispatch(setSelectedUser(chatUser))
               }}
+              unreadCnt={chatUser.unreadCnt}
+
             >
               <Avatar
                 src={require("./images/ram.png")}

@@ -47,6 +47,7 @@ const selectedUserSlice = createSlice({
             state.loginDate = action.payload.loginDate;
             state.sessionId = action.payload.sessionId;
             state.authorities = action.payload.authorities;
+            localStorage.setItem('selectedUser', JSON.stringify(action.payload));
         }
     },
     extraReducers : (builder) => {

@@ -9,6 +9,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { persistStore } from 'redux-persist';
 import 'froala-editor/css/froala_style.min.css';
 import 'froala-editor/css/froala_editor.pkgd.min.css';
+import { BrowserRouter } from 'react-router-dom';
 
 // // Froala Editor 스타일 및 스크립트를 동적으로 추가합니다.
 // const froalaScript = document.createElement('script');
@@ -33,7 +34,9 @@ root.render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
     <React.StrictMode>
+    <BrowserRouter>
     <App />
+    </BrowserRouter>
     </React.StrictMode>
     </PersistGate>
   </Provider>

@@ -19,4 +19,5 @@ export interface User{
     loginDate?:string;
     sessionId?:string;
     authorities?:any[];
+    unreadCnt?:number;
 }
