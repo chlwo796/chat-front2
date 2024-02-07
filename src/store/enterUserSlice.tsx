@@ -23,5 +23,5 @@ const enterUserSlice = createSlice({
     }
 })
 
-export const {setEnterUser} = enterUserSlice.actions;
+export const {setEnterUser, initUser} = enterUserSlice.actions;
 export default enterUserSlice.reducer;

@@ -21,6 +21,17 @@
             const str = `${d1.getFullYear()}-${month}-${date}(${days[d1.getDay()]})`
             console.log(str);
         }
+        // 깊은복사와 얕은복사의 차이
+        const arr = [1,2,3];
+        const arr2 = arr;
+        const arr3 = [...arr]; // 2단계부터는 적용 x [{a:1}, {a:2}, {a:3}]이런 식일 경우
+        const arr4 = JSON.parse(JSON.stringify(arr)); // 위의 문제 경우때문에 사용, 성능문제이슈
+        arr2.pop();
+        console.log(arr); // [1,2]
+        console.log(arr2 === arr); // true
+        arr.push(3);
+        console.log(arr); // [1,2,3]
+        console.log(arr2 === arr); // true
     </script>
 </body>
 </html>

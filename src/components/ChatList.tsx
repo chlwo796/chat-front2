@@ -15,7 +15,11 @@ export const ChatList = () =>{
     const dispatch = useChatDispatch();
     const chatList = useChatSelector((state:any)=>state.chatList);
     const getMsgs = async(init:boolean)=>{
-      const res = await axiosAuth.get(`/chat-list/${loginUser.uiNum}/${selectedUser.uiNum}`);
+      if(!selectedUser.uiNum){
+        return;
+      }
+      try{
+      const res = await axiosAuth.get(`/message-log/${loginUser.uiNum}/${selectedUser.uiNum}/${page.current++}`);
       const tmpMsgs = res.data.list;
       console.log(tmpMsgs);
       tmpMsgs.sort((m1:any, m2:any)=>{
@@ -30,10 +34,9 @@ export const ChatList = () =>{
       }else{
         setMsgs([...tmpMsgs, msgs]);
       }
+    }catch(e){
+
     }
-    const selectChatList = async () => {
-      const res = await axiosAuth.get(`/chat-list/${loginUser.uiNum}/${selectedUser.uiNum}`);
-      setMsgs(res.data.list);
     }
     const days = ['일', '월', '화', '수', '목', '금', '토'];
     const printMessageSeparator = (date1?:any, date2?:any)=>{
@@ -92,6 +95,7 @@ export const ChatList = () =>{
                 {/* {idx === 0 ? <MessageSeparator content={msg.cmiSentTime?.substring(0,10)} />:''} */}
                 {idx !== 0 && printMessageSeparator(idx === 0 ? null : chatList.list[idx-1].cmiSentTime,msg.cmiSentTime)}
                 <Message
+                key={idx}
               model={{
                 message: msg.cmiMessage,
                 sentTime: msg.cmiSentTime,
@@ -99,14 +103,14 @@ export const ChatList = () =>{
                 direction: loginUser.uiNum === msg.cmiSenderUiNum ? 'outgoing' : 'incoming',
                 position: "normal"
               }}
-              avatarSpacer = {loginUser.uiNum === msg.cmiSenderUiNum ? true : false}
+              avatarSpacer = {loginUser.uiNum === msg.cmiSenderUiNum}
             >
               {loginUser.uiNum === msg.cmiSenderUiNum?'':<Avatar src={require("./images/ram.png")} name="Zoe" />}
             </Message> 
             </>  
               ))
             }
-            <Message
+            {/* <Message
               model={{
                 message: "Hello my friend",
                 sentTime: "15 mins ago",
@@ -125,7 +129,7 @@ export const ChatList = () =>{
                 position: "first"
               }}
               avatarSpacer
-            />
+            /> */}
           </MessageList>
           <MessageInput
             placeholder="Type message here"

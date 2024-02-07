@@ -17,6 +17,8 @@ import { persistor } from '.';
 import { Test } from './components/Test';
 import { globalRouter } from './api/globalRouter';
 import { Msg } from './types/Msg.type';
+import { setChatList } from './store/chatListSlice';
+import { axiosAuth } from './api/axiosHttp';
 
 
 
@@ -24,56 +26,68 @@ function App() {
   const navigate = useNavigate();
   globalRouter.navigate = navigate;
   const loginUser = useChatSelector((state:any)=>state.user);
-  const tmpObj = useChatSelector((state:any)=>state.userList);
-  const selectedUser = useChatSelector((state:any)=> state.selectedUser);
   const dispatch = useChatDispatch();
   const configs = [{
     url: `/topic/enter-chat`,
     callback: (data:any) => {
-      const tmpUsers = JSON.parse(data.body);
-      const loginUsers = tmpObj.list.filter((user:any)=>{
-        if(!user.login){
-          for(const tmpUser of tmpUsers){
-            if(tmpUser.login && tmpUser.uiNum === user.uiNum){
-              return user;
-            }
-          }
+      const connectedUsers = JSON.parse(data.body);
+      const users = JSON.parse(localStorage.getItem('userList') || '{}');
+      
+      users.map((user:any)=>{
+        for(const key in connectedUsers){
+          const connectedUser = connectedUsers[key];
+        if(user.uiNum === connectedUser.uiNum){
+          user.login = connectedUser.login;
         }
-      });
-      for(const loginUser of loginUsers){
-        dispatch(setEnterUser(loginUser));
-      }
-      dispatch(setUserList(tmpUsers));
+       }
+      })
+      dispatch(setUserList(users));
     }},{
     url: `/topic/chat/${loginUser.uiNum}`,
-    callback: (data:any) => {
+    callback: async (data:any) => {
       const msg:Msg = JSON.parse(data.body);
       const tmpList: any = JSON.parse(localStorage.getItem('userList') || '[]');
       const selectedUser: any = JSON.parse(localStorage.getItem('selectedUser') || '{}');
       const uiNum = parseInt(localStorage.getItem('uiNum') || '0');
-      if(msg.cmiSenderUiNum !== selectedUser.uiNum){
-        for(const user of tmpObj.list){
-          if(uiNum !== msg.cmiSenderUiNum && msg.cmiSenderUiNum !== selectedUser.uiNum){
+      if(msg.cmiSenderUiNum !== selectedUser.uiNum && msg.cmiSenderUiNum !== uiNum){
+        for(const user of tmpList){
+          if(user.uiNum === msg.cmiSenderUiNum){
+            // 메세지의 받는사람이 로그인유저일경우만
             user.unreadCnt = (isNaN(user.unreadCnt)?1 : ++user.unreadCnt);
-            console.log(user);
           }       
         }
       }
       dispatch(setUserList(tmpList));
-      console.log(msg);
+      if(msg.cmiSenderUiNum === selectedUser.uiNum || msg.cmiReceiveUiNum === selectedUser.uiNum){
+        const chatList: any = JSON.parse(localStorage.getItem('chatList') || '{}')
+        chatList.list.push(msg);
+        dispatch(setChatList(chatList));
+        const res = await axiosAuth.put('/message-log',{
+          cmiSenderUiNum: msg.cmiSenderUiNum,
+          cmiReceiveUiNum: uiNum
+        });
+        console.log(res.data);
+      }
     }
   }]
   useEffect(()=>{
     disconnectClient();
     if(!loginUser.uiNum){
       persistor.purge();
+      navigate('/');
       return;
     }
-    initClient(configs)
-    .catch(e=>{
-      // console.log(e);
-    })
+    setTimeout(async ()=>{
+    await initClient(configs)
+    .catch(e => {
+      console.log(e);
+    });
+  }, 200);
   },[loginUser]);
+
+  // useEffect(()=>{
+  //   console.log(tmpObj.list);
+  // },[tmpObj.list])
   return (
     <>
       <CustomToast/>

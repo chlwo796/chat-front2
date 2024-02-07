@@ -9,4 +9,5 @@ export interface Msg{
     cmiPayload?:string;
     cmiSenderUiNum?:number;
     cmiReceiveUiNum?:number;
+    type?:string;
 }

@@ -2,8 +2,9 @@ import React, { useState } from 'react'
 import { User } from '../types/User.type';
 import { useChatDispatch } from '../store';
 import { useNavigate } from 'react-router-dom';
-import { axiosHttp } from '../api/axiosHttp';
+import { axiosAuth, axiosHttp } from '../api/axiosHttp';
 import { setUser } from '../store/userSlice';
+import { setUserList } from '../store/userListSlice';
 
 export const Login = ()=> {
   const [error, setError] = useState<boolean>(false);
@@ -26,10 +27,13 @@ export const Login = ()=> {
   const login = async() => {
     setError(false);
     try{
-    const res = await axiosHttp.post('/api/login', chatUser);
+    let res = await axiosHttp.post('/api/login', chatUser);
     localStorage.setItem('token', res.data.token);
     localStorage.setItem('uiNum', res.data.uiNum);
-    dispatch(setUser(res.data));
+    const user = res.data;
+    res = await axiosAuth.get(`/chat-user-infos/${localStorage.getItem('uiNum')}`);
+    dispatch(setUserList(res.data));
+    dispatch(setUser(user));
     navigate('/main');
     }catch(err){
       setError(true);
@@ -90,7 +94,7 @@ export const Login = ()=> {
           </button>
         </div>
         <p className="forgot-password text-right">
-        <a href="#" onClick={()=>{}}>Sign Up</a>
+        <a href="#" onClick={()=>navigate('/sign-up')}>회원가입</a>
         </p>
       </form>
       </div>
